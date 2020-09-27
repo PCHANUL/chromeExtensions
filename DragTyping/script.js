@@ -12,10 +12,14 @@ let letters = {
 chrome.tabs.executeScript({
   code: "window.getSelection().getRangeAt(0).toString()"
 }, function(result) {
-  // code의 실행값을 result로 받는다.
-  document.getElementById("selected").innerHTML = result;
-  letters.arr = result[0].split('');
-  printLetter('init')
+  try {
+    // code의 실행값을 result로 받는다.
+    document.getElementById("selected").innerHTML = result;
+    letters.arr = result[0].split('');
+    printLetter('init')
+  } catch (err) {
+    console.log(err)
+  }
 });
 
 
