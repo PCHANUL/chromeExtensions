@@ -1,5 +1,8 @@
 body{
-  width:200px;
-  height:400px;
-  padding:1rem;
+  width: 200px;
+  height: 400px;
+  padding: 20px;
+}
+#keyCode{
+  font-size: 70px;
 }
