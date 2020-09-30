@@ -1,6 +1,12 @@
 
 class App {
   constructor($target) {
+    this.input = {
+      keyCode: '',
+      code: '',
+      key: '',
+      location: '',
+    }
     
     // 키를 입력하면 화면에 출력
     document.addEventListener('keydown', (event) => {
@@ -21,16 +27,26 @@ class App {
     });
 
 
-
+    this.render({ $target });
   }
 
   render({ $target }) {
     console.log('render');
     $target.innerHTML = `
-    <p id='keyCode'>${this.input.keyCode}</p>
-    <p id='code'>${this.input.code}</p>
-    <p id='key'>${this.input.key}</p>
-    <p id='location'>${this.input.location}</p>
+    <div class='codeBox'>
+      <div class='keyCodeDiv'>
+        <p id='keyCode'>${this.input.keyCode}</p>
+      </div>
+      <div>
+        <p id='code'>${this.input.code}</p>
+      </div>
+      <div>
+        <p id='key'>${this.input.key}</p>
+      </div>
+      <div>
+        <p id='location'>${this.input.location}</p>
+      </div>
+    </div>
     `;
   }
 }
