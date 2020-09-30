@@ -16,11 +16,14 @@ class App {
         code: event.code,
         key: event.key,
         location: event.location === 0 ? (
-          '0 (General Keys)' 
+          '0'
+          //  (General Keys)' 
         ) : event.location === 1 ? (
-          '1 (Left-side modifier keys)'
+          '1'
+          //  (Left-side modifier keys)'
         ) : (
-          '2 (Right-side modifier keys)'
+          '2'
+          //  (Right-side modifier keys)'
         ),
       }
       this.render({ $target });
@@ -33,18 +36,19 @@ class App {
   render({ $target }) {
     console.log('render');
     $target.innerHTML = `
-    <div class='codeBox'>
-      <div class='keyCodeDiv'>
-        <p id='keyCode'>${this.input.keyCode}</p>
+    <div class='app'>
+      <div class='keyCodeDiv'>${this.input.keyCode}</div>
+      <div class='codeBox'>
+        <p class='eleName'>event.code</p>
+        <p class='ele'>${this.input.code}</p>
       </div>
-      <div>
-        <p id='code'>${this.input.code}</p>
+      <div class='codeBox'>
+        <p class='eleName'>event.key</p>
+        <p class='ele'>${this.input.key}</p>
       </div>
-      <div>
-        <p id='key'>${this.input.key}</p>
-      </div>
-      <div>
-        <p id='location'>${this.input.location}</p>
+      <div class='codeBox'>
+        <p class='eleName'>event.location</p>
+        <p class='ele'>${this.input.location}</p>
       </div>
     </div>
     `;
