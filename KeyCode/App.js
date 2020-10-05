@@ -29,6 +29,13 @@ class App {
       this.render({ $target });
     });
 
+    document.addEventListener('mousedown', (event) => {
+      console.log(event)
+      // event.clientX
+      // event.clientY
+      
+    })
+
 
     this.render({ $target });
   }
@@ -52,6 +59,9 @@ class App {
       </div>
     </div>
     `;
+    let click = document.createElement('div');
+    click.className = 'click'
+    $target.appendChild(click)
   }
 }
 

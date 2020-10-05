@@ -24,6 +24,15 @@ chrome.tabs.executeScript({
 });
 
 
+
+chrome.tabs.executeScript({
+  code: `window.addEventListener('keydown', (e) => {
+    console.log('asdf')
+  })`
+})
+
+
+
 document.addEventListener('keydown', (e) => {
   console.log(e.keyCode)
 
