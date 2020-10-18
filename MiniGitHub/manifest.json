@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "SimpleGitHub",
+  "name": "MiniGitHub",
   "description": "Chrome extension version GitHub",
   "version": "1.0",
 

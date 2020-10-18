@@ -9,13 +9,15 @@ class App {
 
     this.searchRecords = [];
 
+    this.currentPos = 'search';
+
     this.oReq = new XMLHttpRequest();
     this.oReq.addEventListener("progress", this.updateProgress);
     this.oReq.addEventListener("load", this.reqListener);
     this.oReq.addEventListener("error", this.transferFailed);
 
     chrome.storage.sync.get(['searchRecord'], async(data) => {
-      this.searchRecords = await [...data.searchRecord];
+      if(data.searchRecord !== undefined) this.searchRecords = await [...data.searchRecord];
       console.log(this.searchRecords)
       this.render({ $target });
     })
@@ -50,7 +52,7 @@ class App {
     }
   }
 
-  getData({ $target, owner, repo }) {
+  getData($target, owner, repo) {
     console.log('owner, repo: ', owner, repo);
 
     this.ownerName = document.getElementById('ownerNameInput').value
@@ -72,25 +74,20 @@ class App {
     this.render({ $target });
   }
 
+  changeCurrent($target, pos) {
+    this.currentPos = pos;
+    this.render({ $target });
+  }
+
   render({ $target }) {
     console.log('render')
 
-    $target.innerHTML = `
-    <div id='app'>
-      <div id='inputDiv'>
-        <input id='ownerNameInput' class='input' type=text placeholder='owner name' autocomplete='on'></input>
-        <input id='repoNameInput' class='input' type=text placeholder='repo name' autocomplete='on'></input>
-      </div>
-      <button id='btn'>search</button>
-    </div>
-    `
 
-    document.getElementById('btn')
-    .addEventListener('click', () => this.getData({ $target }))
-
-
-    makeRecordList($target, this.searchRecords);
-
+    defaultBox($target, this.changeCurrent.bind(this), this.render.bind(this));
+    if (this.currentPos === 'search') searchInputs($target, this.getData.bind(this));
+    if (this.currentPos === 'record') makeRecordList($target, this.searchRecords, this.getData.bind(this));
+    
+    
     let issueList = document.createElement('div');
     if (responseResults.length !== 0) {
       responseResults.map((issue) => {
@@ -105,38 +102,64 @@ class App {
   }
 }
 
+function defaultBox($target, currentPos, render) {
+  $target.innerHTML = `
+    <div id='boxContainer'>
+      <div id='searchBox' class='box'>Search</div>
+      <div id='recordBox' class='box'>Record</div>
+    </div>
+  `;
 
-function makeRecordList($target, searchRecords) {
-  let recordList = document.createElement('details');
-  let summary = document.createElement('summary');
-  summary.innerText = 'history';
-  recordList.appendChild(summary);
+  document.getElementById('searchBox').addEventListener('click', () => {
+    currentPos($target, 'search');
+  })
+  document.getElementById('recordBox').addEventListener('click', () => {
+    currentPos($target, 'record');
+  })
+
+}
+
+function searchInputs($target, getData) {
+  let searchEle = `
+    <div id='app'>
+      <div id='inputDiv'>
+        <input id='ownerNameInput' class='input' type=text placeholder='owner name' autocomplete='on'></input>
+        <input id='repoNameInput' class='input' type=text placeholder='repo name' autocomplete='on'></input>
+      </div>
+      <button id='btn'>search</button>
+    </div>
+  `
+
+  $target.insertAdjacentHTML("beforeend", searchEle);
+
+  document.getElementById('btn')
+  .addEventListener('click', () => getData($target));
+}
+
+
+function makeRecordList($target, searchRecords, getData) {
+  let recordList = document.createElement('div');
   if (searchRecords.length !== 0) {
     searchRecords.map((record, i) => {
-      // let recordElement  = document.createElement('div');
-      // recordElement.className = 'record'
-      // recordElement.innerText = `${record.owner} / ${record.repo}`;
-      // recordElement.addEventListener('click', () => this.getData({ $target, ...record }));
-      // recordList.appendChild(recordElement);
-
       let recordElement  = `
         <div class='record' id='${i}'>
           <p>
            owner: ${record.owner} <br /> 
            repo: ${record.repo}
           </p>
-          <button class='recordBtn'>search</button>
-          <button class='recordBtn'>delete</button>
+          <button id='search/${i}' class='recordBtn'>search</button>
+          <button id='delete/${i}' class='recordBtn'>delete</button>
         </div>
       `
       recordList.insertAdjacentHTML("afterbegin", recordElement)
 
-      // recordElement.addEventListener('click', () => this.getData({ $target, ...record }));
+      document.getElementById(`search/${i}`)
+      .addEventListener('click', () => getData($target, record.owner, record.repo));
     })
   } else {
     let noRecord = document.createElement('h2');
     noRecord.innerText = 'no record';
-    recordList.appendChild(recordElement);
+    recordList.appendChild(noRecord);
   }
   $target.appendChild(recordList)
 }
