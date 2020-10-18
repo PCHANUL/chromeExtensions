@@ -49,8 +49,25 @@
   font-size: 10px;
 }
 
-.recordBtn {
+.searchBtn {
   height: 30px;
+}
+.deleteBtn {
+  height: 30px;
+}
+
+.issue {
+  border: 1px solid #000;
+  margin-top: 10px;
+  padding: 0 10px 0 10px;
+}
+.tag {
+  resize: both;
+  display: inline;
+  padding: 2px 6px 2px 6px;
+  margin: 3px;
+  font-size: 10px;
+  border-radius: 10px;
 }
 
 

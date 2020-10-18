@@ -17,12 +17,13 @@ class App {
     this.oReq.addEventListener("error", this.transferFailed);
 
     chrome.storage.sync.get(['searchRecord'], async(data) => {
-      if(data.searchRecord !== undefined) this.searchRecords = await [...data.searchRecord];
-      console.log(this.searchRecords)
+      console.log('data.searchRecord: ', data.searchRecord);
+      if(data.searchRecord.length !== 0) {
+        this.searchRecords = await [...data.searchRecord];
+        this.currentPos = 'record';
+      }
       this.render({ $target });
     })
-
-    // this.render({ $target });
   }
 
   reqListener () {
@@ -55,10 +56,10 @@ class App {
   getData($target, owner, repo) {
     console.log('owner, repo: ', owner, repo);
 
-    this.ownerName = document.getElementById('ownerNameInput').value
-    this.repoName = document.getElementById('repoNameInput').value
+    this.ownerName = owner ? owner : document.getElementById('ownerNameInput').value
+    this.repoName = repo ? repo : document.getElementById('repoNameInput').value
     
-    this.oReq.open("GET", `https://api.github.com/repos/${owner ? owner : this.ownerName}/${repo ? repo : this.repoName}/issues`, false);
+    this.oReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/issues`, false);
     this.oReq.send();
 
     if (!owner && responseResults.length !== 0) {
@@ -70,6 +71,14 @@ class App {
         searchRecord: this.searchRecords
       })
     }
+    this.render({ $target });
+  }
+
+  deleteData($target, owner, repo) {
+    this.searchRecords = this.searchRecords.filter((record) => owner !== record.owner && repo !== record.repo)
+    chrome.storage.sync.set({
+      searchRecord: this.searchRecords
+    });
 
     this.render({ $target });
   }
@@ -82,27 +91,43 @@ class App {
   render({ $target }) {
     console.log('render')
 
-
-    defaultBox($target, this.changeCurrent.bind(this), this.render.bind(this));
-    if (this.currentPos === 'search') searchInputs($target, this.getData.bind(this));
-    if (this.currentPos === 'record') makeRecordList($target, this.searchRecords, this.getData.bind(this));
+    DefaultBox($target, this.changeCurrent.bind(this), this.currentPos);
+    if (this.currentPos === 'search') SearchInputs($target, this.getData.bind(this));
+    if (this.currentPos === 'record') RecordList($target, this.searchRecords, this.getData.bind(this), this.deleteData.bind(this));
     
-    
-    let issueList = document.createElement('div');
-    if (responseResults.length !== 0) {
-      responseResults.map((issue) => {
-        console.log(issue);
-        let ele = document.createElement('h1');
-        ele.innerText = issue.title;
-        issueList.appendChild(ele)
-      })
-    }
-    $target.appendChild(issueList)
+    IssueList($target);
 
   }
 }
 
-function defaultBox($target, currentPos, render) {
+function IssueList($target) {
+  let issueList = document.createElement('div');
+  if (responseResults.length !== 0) {
+    responseResults.map((issue) => {
+      console.log(issue);
+      let issueEle = document.createElement('div');
+      issueEle.className = 'issue';
+
+      let titleEle = document.createElement('div');
+      let title = document.createElement('h3');
+      title.innerText = issue.title;
+      titleEle.appendChild(title);
+      issue.labels.map((label) => {
+        let tag = document.createElement('div');
+        tag.className = 'tag'
+        tag.style.backgroundColor = `#${label.color}`;
+        tag.innerText = label.name;
+        titleEle.appendChild(tag);
+      })
+      issueEle.appendChild(titleEle);
+
+      issueList.appendChild(issueEle);
+    })
+  }
+  $target.appendChild(issueList)
+}
+
+function DefaultBox($target, changeCurrent, currentPos) {
   $target.innerHTML = `
     <div id='boxContainer'>
       <div id='searchBox' class='box'>Search</div>
@@ -111,15 +136,16 @@ function defaultBox($target, currentPos, render) {
   `;
 
   document.getElementById('searchBox').addEventListener('click', () => {
-    currentPos($target, 'search');
+    changeCurrent($target, 'search');
   })
   document.getElementById('recordBox').addEventListener('click', () => {
-    currentPos($target, 'record');
+    changeCurrent($target, 'record');
   })
+  document.getElementById(`${currentPos}Box`).style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
 
 }
 
-function searchInputs($target, getData) {
+function SearchInputs($target, getData) {
   let searchEle = `
     <div id='app'>
       <div id='inputDiv'>
@@ -137,25 +163,28 @@ function searchInputs($target, getData) {
 }
 
 
-function makeRecordList($target, searchRecords, getData) {
+function RecordList($target, searchRecords, getData, deleteData) {
   let recordList = document.createElement('div');
   if (searchRecords.length !== 0) {
-    searchRecords.map((record, i) => {
-      let recordElement  = `
-        <div class='record' id='${i}'>
-          <p>
-           owner: ${record.owner} <br /> 
-           repo: ${record.repo}
-          </p>
-          <button id='search/${i}' class='recordBtn'>search</button>
-          <button id='delete/${i}' class='recordBtn'>delete</button>
-        </div>
-      `
-      recordList.insertAdjacentHTML("afterbegin", recordElement)
+    searchRecords.map((record) => {
+      let recordElement = document.createElement('div');
+      recordElement.className = 'record';
 
-      document.getElementById(`search/${i}`)
-      .addEventListener('click', () => getData($target, record.owner, record.repo));
-    })
+      let content = document.createElement('h4');
+      content.innerText = `${record.owner} / ${record.repo}`;
+      let searchBtn = document.createElement('button');
+      searchBtn.innerText = 'search';
+      searchBtn.addEventListener('click', () => getData($target, record.owner, record.repo));
+      let deleteBtn = document.createElement('button');
+      deleteBtn.innerText = 'delete';
+      deleteBtn.addEventListener('click', () => deleteData($target, record.owner, record.repo));
+
+      recordElement.appendChild(content)
+      recordElement.appendChild(searchBtn)
+      recordElement.appendChild(deleteBtn)
+      recordList.appendChild(recordElement)
+    });
+
   } else {
     let noRecord = document.createElement('h2');
     noRecord.innerText = 'no record';
