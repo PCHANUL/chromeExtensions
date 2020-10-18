@@ -107,25 +107,44 @@ function IssueList($target) {
       console.log(issue);
       let issueEle = document.createElement('div');
       issueEle.className = 'issue';
+      issueEle.appendChild(TitleTag(issue));
 
-      let titleEle = document.createElement('div');
-      let title = document.createElement('h3');
-      title.innerText = issue.title;
-      titleEle.appendChild(title);
-      issue.labels.map((label) => {
-        let tag = document.createElement('div');
-        tag.className = 'tag'
-        tag.style.backgroundColor = `#${label.color}`;
-        tag.innerText = label.name;
-        titleEle.appendChild(tag);
-      })
-      issueEle.appendChild(titleEle);
+      let body = document.createElement('details');
+      let summary = document.createElement('summary');
+      summary.innerText = 'content';
+      body.innerText = issue.body;
+      body.appendChild(summary)
+      issueEle.appendChild(body);
+
+
 
       issueList.appendChild(issueEle);
+      
+
+
     })
   }
   $target.appendChild(issueList)
 }
+
+
+function TitleTag(data) {
+  let titleEle = document.createElement('div');
+  let title = document.createElement('h3');
+  title.className = 'issueTitle';
+  title.innerText = `#${data.number} ${data.title}`;
+  titleEle.appendChild(title);
+
+  data.labels.map((label) => {
+    let tag = document.createElement('div');
+    tag.className = 'tag'
+    tag.style.backgroundColor = `#${label.color}`;
+    tag.innerText = label.name;
+    titleEle.appendChild(tag);
+  })
+  return titleEle
+}
+
 
 function DefaultBox($target, changeCurrent, currentPos) {
   $target.innerHTML = `

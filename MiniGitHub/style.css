@@ -57,21 +57,28 @@
 }
 
 .issue {
-  border: 1px solid #000;
+  resize: both;
   margin-top: 10px;
-  padding: 0 10px 0 10px;
+  padding: 5px 10px 10px 10px;
+  box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.3);
+}
+.issueTitle {
+  margin: 10px 0 10px 5px;
 }
 .tag {
   resize: both;
   display: inline;
   padding: 2px 6px 2px 6px;
-  margin: 3px;
+  margin-left: 3px;
   font-size: 10px;
   border-radius: 10px;
 }
 
 
 details {
-  position: relative;
+  margin-top: 10px;
   width: 100%;
+}
+summary {
+  margin-bottom: 5px;
 }
