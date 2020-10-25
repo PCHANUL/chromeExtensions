@@ -17,5 +17,4 @@ class TabBox {
     })
     document.getElementById(`${currentPos}Box`).style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
   }
-
 }

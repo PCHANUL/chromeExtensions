@@ -97,8 +97,9 @@ class App {
       this.currentPos
     );
 
-    bodyContainer(
+    new BodyContainer(
       document.querySelector('#bodyContainer'),
+      this.currentPos,
       this.searchRecords,
       this.getData.bind(this),
       this.deleteData.bind(this),
@@ -106,19 +107,4 @@ class App {
   }
 }
 
-function TitleTag(data) {
-  let titleEle = document.createElement('div');
-  let title = document.createElement('h3');
-  title.className = 'issueTitle';
-  title.innerText = `#${data.number} ${data.title}`;
-  titleEle.appendChild(title);
 
-  data.labels.map((label) => {
-    let tag = document.createElement('div');
-    tag.className = 'tag'
-    tag.style.backgroundColor = `#${label.color}`;
-    tag.innerText = label.name;
-    titleEle.appendChild(tag);
-  })
-  return titleEle
-}
