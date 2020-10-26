@@ -1,17 +1,11 @@
 class BodyContainer{
   constructor($target, currentPos, searchRecords, getData, deleteData) {
-    
     this.render($target, currentPos, searchRecords, getData, deleteData)
   }
 
   render($target, currentPos, searchRecords, getData, deleteData) {
-    console.log('searchRecords: ', searchRecords);
     $target.innerHTML = "<div id='searchContainer'></div><div id='contentContainer'></div>"
   
-    // SearchInputs(
-    //   document.querySelector('#searchContainer'), 
-    //   getData,
-    // )
     
     if (currentPos === 'search') {
       SearchInputs(
@@ -29,17 +23,17 @@ class BodyContainer{
       )
     }
     
-    IssueList($target);
+    IssueList(document.querySelector('#contentContainer'));
   }
 }
 
 function SearchInputs($target, getData) {
   $target.innerHTML = `
     <div id='inputDiv'>
-      <input id='ownerNameInput' class='input' type=text placeholder='owner name' autocomplete='on'></input>
-      <input id='repoNameInput' class='input' type=text placeholder='repo name' autocomplete='on'></input>
+      <input id='ownerNameInput' class='input form-control' type=text placeholder='owner name' autocomplete='on'></input>
+      <input id='repoNameInput' class='input form-control' type=text placeholder='repo name' autocomplete='on'></input>
     </div>
-    <button id='btn'>search</button>
+    <button id='btn' class='btn btn-outline-primary'>search</button>
   `
 
   document.getElementById('btn')

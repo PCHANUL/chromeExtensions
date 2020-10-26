@@ -2,23 +2,25 @@
   min-width: 300px;
 }
 
-#app {
+#searchContainer {
   width: 300px;
   height: 80px;
+  display: grid;
+  grid-template-columns: auto auto;
 }
 
-#inputDiv {
+/* #inputDiv {
   float: left;
   width: 200px;
-}
+} */
 
-#btn {
+/* #btn {
   float: left;
   width: 60px;
   height: 60px;
-}
+} */
 
-#boxContainer {
+#tabContainer {
   display: grid;
   grid-template-columns: auto auto;
 }
@@ -42,11 +44,8 @@
 
 .record {
   display: grid;
-  grid-template-columns: auto 60px 60px;
-  width: 90%;
-  height: 40px;
-  border: 1px solid #000;
-  font-size: 10px;
+  grid-template-rows: auto 60px 60px;
+  height: 00px;
 }
 
 .searchBtn {

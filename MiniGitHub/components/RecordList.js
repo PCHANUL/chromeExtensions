@@ -12,7 +12,7 @@ class RecordList{
 
     if (searchRecords.length !== 0) {
       searchRecords.map((record, idx) => {
-        new Record(idx, record, $target, getData)
+        Record(idx, record, $target, getData, deleteData)
       });
   
     } else {
@@ -25,26 +25,19 @@ class RecordList{
 }
 
 
-class Record {
-  constructor(key, record, $target, getData) {
-    this.render(key, record, $target, getData)
-  }
+function Record (key, record, $target, getData, deleteData) {
+  let recordDOM = `
+    <div class='record form-control'>
+      <a>${record.owner} / ${record.repo}</a>
+      <button id='search_${key}' class='btn btn-outline-secondary'>0</button>
+      <button id='delete_${key}' class='btn btn-outline-secondary'>X</button>
+    </div>
+  `
+  $target.insertAdjacentHTML('beforeend', recordDOM);
 
-  render(key, record, $target, getData) {
-    let recordDOM = `
-      <div class='record'>
-        <h4>${record.owner} / ${record.repo}</h4>
-        <button id='search_${key}'>search</button>
-        <button id='delete_${key}'>delete</button>
-      </div>
-    `
-    $target.insertAdjacentHTML('beforeend', recordDOM);
+  document.querySelector(`#search_${key}`)
+  .addEventListener('click', () => getData($target, record.owner, record.repo));
 
-    document.querySelector(`#search_${key}`)
-    .addEventListener('click', () => getData($target, record.owner, record.repo));
-
-    document.querySelector(`#delete_${key}`)
-    .addEventListener('click', () => deleteData($target, record.owner, record.repo));
- 
-  }
+  document.querySelector(`#delete_${key}`)
+  .addEventListener('click', () => deleteData($target, record.owner, record.repo));
 }

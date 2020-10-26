@@ -5,8 +5,8 @@ class TabBox {
 
   render($target, changeCurrent, currentPos) {
     $target.innerHTML = `
-      <div id='searchBox' class='box'>Search</div>
-      <div id='recordBox' class='box'>Record</div>
+      <div id='searchBox' class='btn btn-outline-secondary'>Search</div>
+      <div id='recordBox' class='btn btn-outline-secondary'>Record</div>
     `;
   
     document.getElementById('searchBox').addEventListener('click', () => {
@@ -15,6 +15,6 @@ class TabBox {
     document.getElementById('recordBox').addEventListener('click', () => {
       changeCurrent(document.querySelector('#bodyContainer'), 'record');
     })
-    document.getElementById(`${currentPos}Box`).style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+    document.getElementById(`${currentPos}Box`).className = 'btn btn-primary';
   }
 }

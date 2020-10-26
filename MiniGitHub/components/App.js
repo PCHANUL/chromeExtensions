@@ -89,7 +89,7 @@ class App {
   }
 
   render({ $target }) {
-    $target.innerHTML = "<div id='tabContainer'></div><div id='bodyContainer'><div>"
+    $target.innerHTML = "<div id='tabContainer' class='btn-group'></div><div id='bodyContainer'><div>"
 
     new TabBox(
       document.querySelector('#tabContainer'), 
