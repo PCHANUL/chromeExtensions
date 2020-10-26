@@ -3,22 +3,24 @@
 }
 
 #searchContainer {
-  width: 300px;
-  height: 80px;
+  width: 100vw;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  padding-top: 10px;
+  /* margin: 10px; */
 }
 
-/* #inputDiv {
-  float: left;
-  width: 200px;
-} */
+#inputDiv {
+  padding: 10px;
+  margin-top: -10px;
+}
 
-/* #btn {
+#btn {
+  margin-top: -12px;
   float: left;
-  width: 60px;
-  height: 60px;
-} */
+  width: 100vw;
+  height: 50px;
+}
 
 #tabContainer {
   display: grid;
@@ -37,22 +39,35 @@
   background-color: rgba(0, 0, 0, 0.11);
 }
 
-.input {
-  width: 180px;
-  height: 25px;
-}
 
 .record {
   display: grid;
-  grid-template-rows: auto 60px 60px;
-  height: 00px;
+  grid-template-rows: auto auto;
+  width: 100vw;
+  height: 80px;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .searchBtn {
   height: 30px;
 }
 .deleteBtn {
+  outline: none;
+}
+.recordIcon {
+  width: 20px;
+  margin-top: -10px;
+}
+.recordBtn {
   height: 30px;
+  width: 45vw;
+  margin-left: 7px;
+  float: left;
+}
+
+.enterIcon {
+  width: 30px;
 }
 
 .issue {
