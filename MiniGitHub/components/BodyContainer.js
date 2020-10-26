@@ -1,29 +1,42 @@
 class BodyContainer{
-  constructor($target, currentPos, searchRecords, getData, deleteData) {
-    this.render($target, currentPos, searchRecords, getData, deleteData)
+  constructor($target, currentPos, searchRecords, getData, deleteData, currentRepository) {
+
+    this.$target = $target
+    this.currentPos = currentPos;
+    this.searchRecords = searchRecords;
+    this.getData = getData;
+    this.deleteData = deleteData;
+    this.currentRepository = currentRepository;
+
+    this.render();
   }
 
-  render($target, currentPos, searchRecords, getData, deleteData) {
-    $target.innerHTML = "<div id='searchContainer'></div><div id='contentContainer'></div>"
+  render() {
+    this.$target.innerHTML = "<div id='searchContainer'></div><div id='contentContainer'></div>"
   
+    if (responseResults.length === 0) {
+      if (this.currentPos === 'search') {
+        SearchInputs(
+          document.querySelector('#searchContainer'), 
+          this.getData,
+        )
+      };
     
-    if (currentPos === 'search') {
-      SearchInputs(
-        document.querySelector('#searchContainer'), 
-        getData,
-      )
-    };
-  
-    if (currentPos === 'record') {
-      new RecordList(
-        document.querySelector('#searchContainer'), 
-        searchRecords, 
-        getData, 
-        deleteData,
-      )
+      if (this.currentPos === 'record') {
+        new RecordList(
+          document.querySelector('#searchContainer'), 
+          this.searchRecords, 
+          this.getData, 
+          this.deleteData,
+        )
+      }
+    } else {
+      new ContentContainer(
+        document.querySelector('#contentContainer'), 
+        this.currentRepository,
+        this.render.bind(this)
+      );
     }
-    
-    IssueList(document.querySelector('#contentContainer'));
 
   }
 }

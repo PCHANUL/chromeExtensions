@@ -55,6 +55,7 @@ class App {
 
   getData($target, owner, repo) {
     console.log('owner, repo: ', owner, repo);
+    
 
     this.ownerName = owner ? owner : document.getElementById('ownerNameInput').value
     this.repoName = repo ? repo : document.getElementById('repoNameInput').value
@@ -103,6 +104,7 @@ class App {
       this.searchRecords,
       this.getData.bind(this),
       this.deleteData.bind(this),
+      { name: this.ownerName, repo: this.repoName }
     );
   }
 }

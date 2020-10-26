@@ -1,46 +1,25 @@
-function ContentContainer($target) {
+function ContentContainer($target, currentRepository, render) {
+  $target.innerHTML = "<div id='repositoryContainer'></div><div id='issueContainer'></div>";
 
+  currentRepo(document.querySelector('#repositoryContainer'), currentRepository, render);
+  IssueList(document.querySelector('#issueContainer'));
 }
 
-
-function IssueList($target) {
-  let issueList = document.createElement('div');
+function currentRepo($target, currentRepository, render) {
   if (responseResults.length !== 0) {
-    responseResults.map((issue) => {
-      let issueEle = Issue(issue)
-      issueList.insertAdjacentHTML('beforeend', issueEle);
+    $target.insertAdjacentHTML('beforeend', `
+      <div class="alert alert-primary" >
+        <strong>${currentRepository.name}</strong> / ${currentRepository.repo}
+        <button id='closeBtn' type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `)
+
+    document.querySelector('#closeBtn').addEventListener('click', () => {
+      responseResults = [];
+      render();
     })
   }
-  $target.appendChild(issueList)
 }
 
-function Issue(data) {
-  return `
-    <div class='issue'>
-    ${TitleTag(data)}
-      <details>
-        <summary>content</summary>
-        ${data.body}
-      </details>
-    </div>
-  `
-}
-
-
-
-function TitleTag(data) {
-  let tags = data.labels.map((label) => {
-    return `
-      <div class='tag' style='background-color: #${label.color}'>
-        ${label.name}
-      </div>
-    `
-  });
-
-  return `
-    <div>
-      <p class='issueTitle'>#${data.number} ${data.title}</p>
-      ${tags.join('')}
-    </div>
-  `
-}
