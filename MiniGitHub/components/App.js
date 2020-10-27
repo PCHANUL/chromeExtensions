@@ -1,8 +1,10 @@
-let responseResults = [];
+let responseResults = {};
 
 
 class App {
   constructor($target) {
+
+    this.$target = $target;
 
     this.ownerName = '';
     this.repoName = '';
@@ -12,58 +14,71 @@ class App {
     this.currentPos = 'search';
 
     this.oReq = new XMLHttpRequest();
-    this.oReq.addEventListener("progress", this.updateProgress);
     this.oReq.addEventListener("load", this.reqListener);
     this.oReq.addEventListener("error", this.transferFailed);
 
     chrome.storage.sync.get(['searchRecord'], async(data) => {
-      console.log('data.searchRecord: ', data.searchRecord);
       if(data.searchRecord.length !== 0) {
         this.searchRecords = await [...data.searchRecord];
         this.currentPos = 'record';
       }
-      this.render({ $target });
+      this.render();
     })
   }
 
   reqListener () {
     let data = JSON.parse(this.response);
-    let result = [];
-    for (let i of data) {
-      result.push({
-        number: i.number,
-        title: i.title,
-        body: i.body,
-        state: i.state,
-        assignees: i.assignees,
-        labels: i.labels,
-      })
+    console.log(data)
+
+    if (data[0].url.includes('issue')) {
+      let issueResult = [];
+      for (let i of data) {
+        issueResult.push({
+          number: i.number,
+          title: i.title,
+          body: i.body,
+          state: i.state,
+          assignees: i.assignees,
+          labels: i.labels,
+        })
+      }
+      responseResults = { issues: issueResult };
     }
-    responseResults = result;
+
+    if (data[0].url.includes('pulls')) {
+      let pullResult = [];
+      for (let i of data) {
+        pullResult.push({
+          number: i.number,
+          title: i.title,
+          body: i.body,
+          state: i.state,
+          assignees: i.assignees,
+          labels: i.labels,
+        })
+      }
+      responseResults = { pulls: pullResult };
+    }
+
   }
 
   transferFailed (e) {
     console.log("error" , e)
   }
 
-  updateProgress (oEvent) {
-    if (oEvent.lengthComputable) {
-      var percentComplete = oEvent.loaded / oEvent.total * 100;
-      console.log(percentComplete)
-    }
-  }
 
-  getData($target, owner, repo) {
+  getData(owner, repo) {
     console.log('owner, repo: ', owner, repo);
-    
 
-    this.ownerName = owner ? owner : document.getElementById('ownerNameInput').value
-    this.repoName = repo ? repo : document.getElementById('repoNameInput').value
+    this.ownerName = owner ? owner : document.querySelector('#ownerNameInput').value
+    this.repoName = repo ? repo : document.querySelector('#repoNameInput').value
     
     this.oReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/issues`, false);
     this.oReq.send();
+    this.oReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/pulls`, false);
+    this.oReq.send();
 
-    if (!owner && responseResults.length !== 0) {
+    if (!owner && !responseResults.issues) {
       this.searchRecords.push({
         owner: this.ownerName,
         repo: this.repoName,
@@ -72,25 +87,25 @@ class App {
         searchRecord: this.searchRecords
       })
     }
-    this.render({ $target });
+    this.render();
   }
 
-  deleteData($target, owner, repo) {
+  deleteData(owner, repo) {
     this.searchRecords = this.searchRecords.filter((record) => owner !== record.owner && repo !== record.repo)
     chrome.storage.sync.set({
       searchRecord: this.searchRecords
     });
 
-    this.render({ $target });
+    this.render();
   }
 
-  changeCurrent($target, pos) {
+  changeCurrent(pos) {
     this.currentPos = pos;
-    this.render({ $target });
+    this.render();
   }
 
-  render({ $target }) {
-    $target.innerHTML = "<div id='tabContainer' class='btn-group'></div><div id='bodyContainer'><div>"
+  render() {
+    this.$target.innerHTML = "<div id='tabContainer' class='btn-group'></div><div id='bodyContainer'><div>"
 
     new TabBox(
       document.querySelector('#tabContainer'), 
@@ -104,7 +119,7 @@ class App {
       this.searchRecords,
       this.getData.bind(this),
       this.deleteData.bind(this),
-      { name: this.ownerName, repo: this.repoName }
+      { name: this.ownerName, repo: this.repoName, render: this.render.bind(this) }
     );
   }
 }

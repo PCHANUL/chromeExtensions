@@ -14,9 +14,13 @@ class RecordList{
       });
       
     } else {
-      let noRecord = document.createElement('h2');
-      noRecord.innerText = 'no record';
-      recordList.appendChild(noRecord);
+
+      let noRecord = `
+        <div class='record'>
+          <h2>no record</h2>
+        </div>
+      `
+      recordList.insertAdjacentHTML('beforeend', noRecord);
     }
     $target.appendChild(recordList)
   }
@@ -40,8 +44,8 @@ function Record (key, record, $target, getData, deleteData) {
   $target.insertAdjacentHTML('beforeend', recordDOM);
 
   document.querySelector(`#search_${key}`)
-  .addEventListener('click', () => getData($target, record.owner, record.repo));
+  .addEventListener('click', () => getData(record.owner, record.repo));
 
   document.querySelector(`#delete_${key}`)
-  .addEventListener('click', () => deleteData($target, record.owner, record.repo));
+  .addEventListener('click', () => deleteData(record.owner, record.repo));
 }

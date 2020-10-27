@@ -14,7 +14,12 @@ class BodyContainer{
   render() {
     this.$target.innerHTML = "<div id='searchContainer'></div><div id='contentContainer'></div>"
   
-    if (responseResults.length === 0) {
+    if (responseResults.issues) {
+      new ContentContainer(
+        document.querySelector('#contentContainer'), 
+        this.currentRepository,
+      );
+    } else {
       if (this.currentPos === 'search') {
         SearchInputs(
           document.querySelector('#searchContainer'), 
@@ -30,12 +35,7 @@ class BodyContainer{
           this.deleteData,
         )
       }
-    } else {
-      new ContentContainer(
-        document.querySelector('#contentContainer'), 
-        this.currentRepository,
-        this.render.bind(this)
-      );
+      
     }
 
   }

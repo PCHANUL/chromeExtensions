@@ -1,24 +1,29 @@
-function ContentContainer($target, currentRepository, render) {
+function ContentContainer($target, currentRepository) {
   $target.innerHTML = "<div id='repositoryContainer'></div><div id='issueContainer'></div>";
 
-  currentRepo(document.querySelector('#repositoryContainer'), currentRepository, render);
+  currentRepo(document.querySelector('#repositoryContainer'), currentRepository);
   IssueList(document.querySelector('#issueContainer'));
 }
 
-function currentRepo($target, currentRepository, render) {
-  if (responseResults.length !== 0) {
+function currentRepo($target, currentRepository) {
+  if (responseResults.issues) {
     $target.insertAdjacentHTML('beforeend', `
       <div class="alert alert-primary" >
         <strong>${currentRepository.name}</strong> / ${currentRepository.repo}
         <button id='closeBtn' type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <br />
+        <select id="category">
+          <option value="issues">Issues</option>
+          <option value="pulls">Pulls</option>
+        </select>
       </div>
     `)
 
     document.querySelector('#closeBtn').addEventListener('click', () => {
       responseResults = [];
-      render();
+      currentRepository.render();
     })
   }
 }

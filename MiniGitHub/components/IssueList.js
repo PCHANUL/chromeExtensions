@@ -1,7 +1,8 @@
 function IssueList($target) {
   let issueList = document.createElement('div');
-  if (responseResults.length !== 0) {
-    responseResults.map((issue) => {
+  console.log('responseResults.issues: ', responseResults);
+  if (responseResults.issues) {
+    responseResults.issues.map((issue) => {
       let issueEle = Issue(issue)
       issueList.insertAdjacentHTML('beforeend', issueEle);
     })

@@ -13,5 +13,5 @@ function SearchInputs($target, getData) {
   `
 
   document.getElementById('btn')
-  .addEventListener('click', () => getData($target));
+  .addEventListener('click', () => getData());
 }
