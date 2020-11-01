@@ -1,3 +1,4 @@
+// global
 let responseResults = {};
 
 
@@ -13,10 +14,6 @@ class App {
 
     this.currentPos = 'search';
 
-    this.oReq = new XMLHttpRequest();
-    this.oReq.addEventListener("load", this.reqListener);
-    this.oReq.addEventListener("error", this.transferFailed);
-
     chrome.storage.sync.get(['searchRecord'], async(data) => {
       if(data.searchRecord.length !== 0) {
         this.searchRecords = await [...data.searchRecord];
@@ -26,57 +23,16 @@ class App {
     })
   }
 
-  reqListener () {
-    let data = JSON.parse(this.response);
-    console.log(data)
-
-    if (data[0].url.includes('issue')) {
-      let issueResult = [];
-      for (let i of data) {
-        issueResult.push({
-          number: i.number,
-          title: i.title,
-          body: i.body,
-          state: i.state,
-          assignees: i.assignees,
-          labels: i.labels,
-        })
-      }
-      responseResults = { issues: issueResult };
-    }
-
-    if (data[0].url.includes('pulls')) {
-      let pullResult = [];
-      for (let i of data) {
-        pullResult.push({
-          number: i.number,
-          title: i.title,
-          body: i.body,
-          state: i.state,
-          assignees: i.assignees,
-          labels: i.labels,
-        })
-      }
-      responseResults = { pulls: pullResult };
-    }
-
-  }
-
-  transferFailed (e) {
-    console.log("error" , e)
-  }
-
-
   getData(owner, repo) {
     console.log('owner, repo: ', owner, repo);
 
     this.ownerName = owner ? owner : document.querySelector('#ownerNameInput').value
     this.repoName = repo ? repo : document.querySelector('#repoNameInput').value
     
-    this.oReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/issues`, false);
-    this.oReq.send();
-    this.oReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/pulls`, false);
-    this.oReq.send();
+    getDataReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/issues`, false);
+    getDataReq.send();
+    getDataReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/pulls`, false);
+    getDataReq.send();
 
     if (!owner && !responseResults.issues) {
       this.searchRecords.push({

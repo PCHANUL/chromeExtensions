@@ -1,6 +1,5 @@
 function IssueList($target) {
   let issueList = document.createElement('div');
-  console.log('responseResults.issues: ', responseResults);
   if (responseResults.issues) {
     responseResults.issues.map((issue) => {
       let issueEle = Issue(issue)
@@ -11,6 +10,7 @@ function IssueList($target) {
 }
 
 function Issue(data) {
+  postTransMarkdown(data.body)
   return `
     <details class='issue'>
       <summary>${TitleTag(data)}</summary>
@@ -34,4 +34,23 @@ function TitleTag(data) {
       ${tags.join('')}
     </div>
   `
+}
+
+function postTransMarkdown(content) {
+  console.log('content: ', content);
+  transMarkdown.open("POST", "https://api.github.com/markdown", false);
+  transMarkdown.setRequestHeader("Authorization", "Basic " + btoa("PCHANUL:Qcksdnf95162!"));
+  transMarkdown.setRequestHeader("Accept", "application/vnd.github.v3+json");
+  transMarkdown.setRequestHeader("Content-Type", "text/html");
+  transMarkdown.send(`
+    {
+      "text": "${content}",
+      "mode": "gfm",
+      "context": "github/gollum"
+    }
+  `);
+
+  
+
+
 }
