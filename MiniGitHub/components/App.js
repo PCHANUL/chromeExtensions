@@ -34,14 +34,26 @@ class App {
     getDataReq.open("GET", `https://api.github.com/repos/${this.ownerName}/${this.repoName}/pulls`, false);
     getDataReq.send();
 
-    if (!owner && !responseResults.issues) {
-      this.searchRecords.push({
+    if (!owner) {
+      let isIncluded = false;
+      let search = {
         owner: this.ownerName,
         repo: this.repoName,
-      })
-      chrome.storage.sync.set({
-        searchRecord: this.searchRecords
-      })
+      }
+      let owner = this.ownerName.toLowerCase()
+      let repo = this.ownerName.toLowerCase()
+      for (let record of this.searchRecords) {
+        if (record.owner.toLowerCase() === owner && record.repo.toLowerCase() === repo) { 
+          isIncluded = true;
+        }
+      }
+
+      if (!isIncluded) {
+        this.searchRecords.push(search);
+        chrome.storage.sync.set({
+          searchRecord: this.searchRecords
+        })
+      }
     }
     this.render();
   }
