@@ -1,20 +1,27 @@
+let issueBody = [];
+
+
 function IssueList($target) {
+  issueBody = [];
+
   let issueList = document.createElement('div');
   if (responseResults.issues) {
-    responseResults.issues.map((issue) => {
-      let issueEle = Issue(issue)
+    responseResults.issues.map((issue, i) => {
+      let issueEle = Issue(issue, i)
       issueList.insertAdjacentHTML('beforeend', issueEle);
     })
   }
   $target.appendChild(issueList)
+
+  insertMarkdown();
 }
 
-function Issue(data) {
-  postTransMarkdown(data.body)
+function Issue(data, i) {
+  postTransMarkdown(data.body);
+
   return `
-    <details class='issue'>
+    <details id='issue_${i}' class='issue'>
       <summary>${TitleTag(data)}</summary>
-      ${data.body}
     </details>
   `
 }
@@ -37,20 +44,17 @@ function TitleTag(data) {
 }
 
 function postTransMarkdown(content) {
-  console.log('content: ', content);
+  const body = `{"text": ${JSON.stringify(content)},"mode": "gfm","context": "github/gollum"}`
   transMarkdown.open("POST", "https://api.github.com/markdown", false);
-  transMarkdown.setRequestHeader("Authorization", "Basic " + btoa("PCHANUL:Qcksdnf95162!"));
-  transMarkdown.setRequestHeader("Accept", "application/vnd.github.v3+json");
-  transMarkdown.setRequestHeader("Content-Type", "text/html");
-  transMarkdown.send(`
-    {
-      "text": "${content}",
-      "mode": "gfm",
-      "context": "github/gollum"
-    }
-  `);
+  // transMarkdown.setRequestHeader("Authorization", "Basic " + btoa('username:password'));
+  transMarkdown.setRequestHeader("Accept", "*/*");
+  transMarkdown.setRequestHeader("Content-Type", "text/plain");
+  transMarkdown.send(body);
+}
 
-  
-
-
+function insertMarkdown() {
+  console.log(issueBody);
+  issueBody.map((item, i) => {
+    document.querySelector(`#issue_${i}`).insertAdjacentHTML('beforeend', item);
+  })
 }

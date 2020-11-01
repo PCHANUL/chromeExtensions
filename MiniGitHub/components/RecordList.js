@@ -12,9 +12,7 @@ class RecordList{
       searchRecords.map((record, idx) => {
         Record(idx, record, $target, getData, deleteData)
       });
-      
     } else {
-
       let noRecord = `
         <div class='record'>
           <h2>no record</h2>
