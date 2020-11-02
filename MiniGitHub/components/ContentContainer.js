@@ -19,8 +19,8 @@ function currentRepo($target, currentRepository) {
           <option value="pulls">Pulls</option>
         </select>
       </div>
-      <button id='btn' class='btn btn-outline-secondary'>
-        <img class='enterIcon' src='../img/check.png' />
+      <button id='addBtn' class='btn btn-outline-secondary'>
+        <img class='enterIcon' src='../img/add.png' />
       </button>
     `)
 

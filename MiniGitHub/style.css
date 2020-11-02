@@ -124,9 +124,22 @@ details > summary::-webkit-details-marker {
   height: 70px;
   margin-top: 10px;
 }
-
-
 #authBtn > p {
   line-height: 0px;
   margin-top: 15px;
+}
+
+/* repository */
+#repositoryContainer {
+  height: 150px;
+}
+#addBtn {
+  margin: -5px 0 5px 10px;
+  float: left;
+  width: 93vw;
+  height: 40px;
+}
+#addBtn img {
+  /* margin-top: -10px; */
+  width: 20px;
 }
