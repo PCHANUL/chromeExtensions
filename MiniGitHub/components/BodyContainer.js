@@ -36,7 +36,56 @@ class BodyContainer{
         )
       }
       
+      if (this.currentPos === 'auth') {
+        AuthInput(
+          document.querySelector('#searchContainer'),
+          this.render.bind(this),
+        )
+      
+      }
     }
 
   }
 }
+
+
+function setUserAuth(render) {
+  console.log('render: ', render);
+  username = document.querySelector('#usernameAuth').value;
+  password = document.querySelector('#passwordAuth').value;
+  if (username && password) render();
+}
+
+function AuthInput($target, render) {
+  let input = `
+    <input id='usernameAuth' class='form-control' type=text placeholder='username' value=${username ? username : ''}></input>
+    <input id='passwordAuth' class='form-control' type=password placeholder='password' value=${password ? password : ''}></input>
+  `;
+  let alert;
+  if (username && password) {
+    alert = `
+      <button id='authBtn' class='btn btn-success'>
+        <img class='enterIcon' src='../img/safe.png' />
+      </button>
+    `
+  } else {
+    alert = `
+      <button id='authBtn' class='btn btn-warning'>
+        <img class='enterIcon' src='../img/insecure.png' />
+        <p style='color: #fff'>입력하신 정보는 저장되지 않습니다</p>
+      </button>
+    `;
+  }
+
+
+  $target.innerHTML =  input + alert;
+  
+
+  document.getElementById('usernameAuth')
+  .addEventListener('change', () => setUserAuth(render));
+
+  document.getElementById('passwordAuth')
+  .addEventListener('change', () => setUserAuth(render));
+}
+
+

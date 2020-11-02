@@ -8,9 +8,9 @@ function SearchInputs($target, getData) {
       <input id='repoNameInput' class='form-control' type=text placeholder='repo name' style='height: 50px'></input>
     </div>
     <button id='btn' class='btn btn-outline-secondary'>
-      <img class='enterIcon' src='../check.png' />
+      <img class='enterIcon' src='../img/check.png' />
     </button>
-  `
+  `;
 
   document.getElementById('btn')
   .addEventListener('click', () => getData());

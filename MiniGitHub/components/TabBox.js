@@ -8,6 +8,7 @@ class TabBox {
       $target.innerHTML = `
         <div id='searchBox' class='btn btn-outline-secondary'>Search</div>
         <div id='recordBox' class='btn btn-outline-secondary'>Record</div>
+        <div id='authBox' class='btn btn-warning'>Auth</div>
       `;
 
       document.getElementById('searchBox').addEventListener('click', () => {
@@ -16,12 +17,21 @@ class TabBox {
       document.getElementById('recordBox').addEventListener('click', () => {
         changeCurrent('record');
       })
+      document.getElementById('authBox').addEventListener('click', () => {
+        changeCurrent('auth');
+      })
       document.getElementById(`${currentPos}Box`).className = 'btn btn-primary';
+
+      if (username && password) {
+        document.getElementById('authBox').className = 'btn btn-success';
+      }
+      
       
     } else {
       $target.innerHTML = `
       <div id='searchBox' class='btn btn-outline-secondary disabled'>Search</div>
       <div id='recordBox' class='btn btn-outline-secondary disabled'>Record</div>
+      <div id='authBox' class='btn btn-${username && password ? 'success' : 'warning'} disabled'>Auth</div>
       `;
 
       document.getElementById(`${currentPos}Box`).className = 'btn btn-primary disabled';

@@ -34,7 +34,8 @@
 
 #tabContainer {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto 60px;
+  text-align: center;
 }
 
 .box {
@@ -116,4 +117,16 @@ details > summary::-webkit-details-marker {
 
 .alert {
   margin-top: 5px;
+}
+
+/* Auth window */
+#authBtn {
+  height: 70px;
+  margin-top: 10px;
+}
+
+
+#authBtn > p {
+  line-height: 0px;
+  margin-top: 15px;
 }

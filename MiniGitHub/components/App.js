@@ -1,5 +1,7 @@
 // global
 let responseResults = {};
+let username;
+let password;
 
 
 class App {

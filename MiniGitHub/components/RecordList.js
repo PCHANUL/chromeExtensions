@@ -31,10 +31,10 @@ function Record (key, record, $target, getData, deleteData) {
       <span>${record.owner} / ${record.repo}</span>
       <div>
         <button id='search_${key}' class='recordBtn btn btn-outline-secondary'>
-          <img class='recordIcon' src='../check.png' />
+          <img class='recordIcon' src='../img/check.png' />
         </button>
         <button id='delete_${key}' class='recordBtn btn btn-outline-secondary'>
-          <img class='recordIcon' src='../delete.png' />
+          <img class='recordIcon' src='../img/delete.png' />
         </button>
       </div>
     </div>
