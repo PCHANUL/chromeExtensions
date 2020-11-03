@@ -2,8 +2,6 @@ let issueBody = [];
 
 
 function IssueList($target) {
-
-  console.log('responseResults: ', responseResults);
   issueBody = [];
 
   let issueList = document.createElement('div');
@@ -55,7 +53,6 @@ function postTransMarkdown(content) {
 }
 
 function insertMarkdown() {
-  console.log(issueBody);
   issueBody.map((item, i) => {
     document.querySelector(`#issue_${i}`).insertAdjacentHTML('beforeend', item);
   })
