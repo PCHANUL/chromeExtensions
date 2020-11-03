@@ -4,7 +4,7 @@ class TabBox {
   } 
 
   render($target, changeCurrent, currentPos) {
-    if (!responseResults.issues) {
+    if (!responseResults.isRequested) {
       $target.innerHTML = `
         <div id='searchBox' class='btn btn-outline-secondary'>Search</div>
         <div id='recordBox' class='btn btn-outline-secondary'>History</div>

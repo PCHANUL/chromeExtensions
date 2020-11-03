@@ -34,9 +34,7 @@ function reqListenerGetData() {
     }
     responseResults.pulls = pullResult;
   }
-  
-  
-  
+  responseResults.isRequested = true;
 }
 
 function transferFailed(e) {

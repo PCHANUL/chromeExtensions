@@ -1,5 +1,6 @@
 // global
 let responseResults = {
+  isRequested: false,
   issues: [],
   pulls: []
 };

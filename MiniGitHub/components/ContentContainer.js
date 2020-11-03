@@ -25,7 +25,7 @@ function currentRepo($target, currentRepository) {
     `)
 
     document.querySelector('#closeBtn').addEventListener('click', () => {
-      responseResults = [];
+      responseResults.isRequested = false;
       currentRepository.render();
     })
     document.querySelector('#category').addEventListener('change', () => {

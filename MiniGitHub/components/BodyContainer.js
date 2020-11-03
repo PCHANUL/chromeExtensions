@@ -14,7 +14,7 @@ class BodyContainer{
   render() {
     this.$target.innerHTML = "<div id='searchContainer'></div><div id='contentContainer'></div>"
   
-    if (responseResults.issues) {
+    if (responseResults.isRequested) {
       new ContentContainer(
         document.querySelector('#contentContainer'), 
         this.currentRepository,
