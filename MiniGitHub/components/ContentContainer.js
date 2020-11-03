@@ -28,6 +28,10 @@ function currentRepo($target, currentRepository) {
       responseResults = [];
       currentRepository.render();
     })
+    document.querySelector('#category').addEventListener('change', () => {
+      console.log(responseResults)
+      currentRepository.render();
+    })
   }
 }
 

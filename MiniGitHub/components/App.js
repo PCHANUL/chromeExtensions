@@ -1,5 +1,8 @@
 // global
-let responseResults = {};
+let responseResults = {
+  issues: [],
+  pulls: []
+};
 let username;
 let password;
 

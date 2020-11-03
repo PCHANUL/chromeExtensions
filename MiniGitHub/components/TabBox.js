@@ -7,7 +7,7 @@ class TabBox {
     if (!responseResults.issues) {
       $target.innerHTML = `
         <div id='searchBox' class='btn btn-outline-secondary'>Search</div>
-        <div id='recordBox' class='btn btn-outline-secondary'>Record</div>
+        <div id='recordBox' class='btn btn-outline-secondary'>History</div>
         <div id='authBox' class='btn btn-warning'>Auth</div>
       `;
 

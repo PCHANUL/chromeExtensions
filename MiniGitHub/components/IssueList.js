@@ -2,6 +2,8 @@ let issueBody = [];
 
 
 function IssueList($target) {
+
+  console.log('responseResults: ', responseResults);
   issueBody = [];
 
   let issueList = document.createElement('div');

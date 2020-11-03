@@ -17,7 +17,7 @@ function reqListenerGetData() {
         labels: i.labels,
       })
     }
-    responseResults = { issues: issueResult };
+    responseResults.issues = issueResult;
   }
 
   if (data[0].url.includes('pulls')) {
@@ -32,8 +32,11 @@ function reqListenerGetData() {
         labels: i.labels,
       })
     }
-    responseResults = { pulls: pullResult };
+    responseResults.pulls = pullResult;
   }
+  
+  
+  
 }
 
 function transferFailed(e) {
