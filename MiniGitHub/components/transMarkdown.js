@@ -3,8 +3,8 @@ transMarkdown.addEventListener("load", reqListenerMarkdown);
 transMarkdown.addEventListener("error", translateMarkdownFailed);
 
 function reqListenerMarkdown() {
-  console.log('JSON.parse(this.response).message: ', JSON.parse(this.response).message);
-  if (JSON.parse(this.response).message) {
+  console.log('JSON.parse(this.response).message: ', this.response);
+  if (!JSON.parse(this.response).message) {
     issueBody.push(`
       <p style="font-weight: bold; text-align: center; margin-top: 15px;">
         Git API 요청 한도가 초과되었습니다.<br /> 
@@ -12,6 +12,7 @@ function reqListenerMarkdown() {
       </p>
     `);
   } else {
+    console.log('asdf')
     issueBody.push(this.response);
   }
 }

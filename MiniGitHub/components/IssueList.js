@@ -44,9 +44,11 @@ function TitleTag(data) {
 }
 
 function postTransMarkdown(content) {
-  const body = `{"text": ${JSON.stringify(content)},"mode": "gfm","context": "github/gollum"}`
+  const body = `{"text": ${JSON.stringify(content)},"mode": "gfm","context": "github/gollum"}`;
+  console.log('`${username}:${password}`: ', `${username}:${password}`);
+
   transMarkdown.open("POST", "https://api.github.com/markdown", false);
-  // transMarkdown.setRequestHeader("Authorization", "Basic " + btoa('username:password'));
+  // transMarkdown.setRequestHeader("Authorization", "Basic " + btoa(`'${'PCHANUL'}:${'QKRcksdnf95162!'}'`));
   transMarkdown.setRequestHeader("Accept", "*/*");
   transMarkdown.setRequestHeader("Content-Type", "text/plain");
   transMarkdown.send(body);
