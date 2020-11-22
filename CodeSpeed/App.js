@@ -1,5 +1,3 @@
-
-
 class App {
   constructor($target) {
     this.target = $target;
@@ -47,7 +45,32 @@ class App {
     resultDiv.id = 'result';
     resultDiv.style.border = '1px solid #000';
     this.target.appendChild(resultDiv);
+
+
+    let canvas = document.createElement('canvas');
+    canvas.id = 'graphCanvas';
+    let ctx = canvas.getContext('2d');
+    this.target.appendChild(canvas);
+
+    drawGraph(ctx);
+
+    
   }
+}
+
+function drawGraph(ctx) {
+  
+
+  let clientWidth = document.querySelector('#graphCanvas').clientWidth;
+  let clientHeight = document.querySelector('#graphCanvas').clientHeight;
+  alert(clientHeight);
+
+  let gWidth = clientWidth / 10;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(gWidth, clientHeight, 50, -50);
+  
+
+  
 }
 
 function initCode() {
