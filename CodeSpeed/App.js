@@ -1,7 +1,13 @@
 class App {
   constructor($target) {
     this.target = $target;
-    this.dataArr = [];
+    this.initData = {
+      min: 0,
+      avg: 0,
+      max: 0,
+    };
+    this.dataArr = this.initData;
+    this.animationMethod;
 
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
@@ -12,6 +18,7 @@ class App {
 
   initCode() {
     document.querySelector('#codeArea').value = '';
+    this.dataArr = this.initData;
     chrome.storage.sync.set({
       code: ''
     });
@@ -29,32 +36,51 @@ class App {
     });
   }
 
-  getCode() {
-    this.dataArr = [];
+  getCode(e) {
+    e.target.className = 'btn btn-primary disabled';
+    e.target.disabled = true;
+
+    let times = [];
     let code = document.querySelector('#codeArea').value;
-    for(let i = 0; i < 5; i++) {
+    for(let i = 0; i < 50; i++) {
       let result = this.calcFunction(code);
-      this.dataArr.push(result);
+      times.push(result);
     }
-    this.drawGraph();
+    times.sort((a, b) => a - b);
+    this.dataArr.min = times[0]
+    this.dataArr.max = times[times.length - 1];
+    this.dataArr.avg = times.reduce((acc, cur) => acc + cur) / times.length;
+
+    console.log('times: ', times);
+    console.log('this.dataArr: ', this.dataArr);
+
+    this.drawGraph()
+    setTimeout(() => {
+      window.cancelAnimationFrame(this.animationMethod);
+      e.target.className = 'btn btn-primary';
+      e.target.disabled = false;
+    }, 1000)
   }
 
+
+
   drawGraph() {
+    console.log('draw');
     let clientWidth = this.canvas.width;
     let clientHeight = this.canvas.height;
-    let gWidth = clientWidth / 10;
+    this.ctx.clearRect(0, 0, clientWidth, clientHeight);
+    let gWidth = clientWidth / 3;
     
-    this.dataArr.forEach((data, idx) => {
+    Object.keys(this.dataArr).forEach((data, idx) => {
       this.ctx.fillStyle = '#4287f5';
-      this.ctx.fillRect((gWidth + 5) * idx, clientHeight, gWidth, -1 * data);
+      this.ctx.fillRect((gWidth + 5) * idx, clientHeight, gWidth, -1 * this.dataArr[data] * 10);
     })
+    this.animationMethod = window.requestAnimationFrame(this.drawGraph.bind(this))
   }
   
   calcFunction(code) {
     let start = performance.now();
-    for(let i = 0; i < 30; i++) {
-      new Function(code)();
-    }
+    new Function(code)();
     let finished = performance.now();
     let elapsed = (finished - start);
     return elapsed;
@@ -69,19 +95,27 @@ class App {
     codeArea.addEventListener('keyup', this.updateData.bind(this));
     this.target.appendChild(codeArea);
 
+    // button group
+    let btnGroup = document.createElement('div');
+    btnGroup.className = 'btn-group btn-group-toggle';
+
     // input button
     let inputButton = document.createElement('button');
+    inputButton.id = "startBtn";
     inputButton.className = "btn btn-primary";
-    inputButton.innerText = '성능측정'
+    inputButton.innerText = '성능 측정'
     inputButton.addEventListener('click', this.getCode.bind(this));
-    this.target.appendChild(inputButton);
+    btnGroup.appendChild(inputButton);
     
     // init button
     let initButton = document.createElement('button');
+    initButton.id = "initBtn";
     initButton.className = "btn btn-outline-secondary";
     initButton.innerText = '초기화'
     initButton.addEventListener('click', this.initCode.bind(this))
-    this.target.appendChild(initButton);
+    btnGroup.appendChild(initButton);
+
+    this.target.appendChild(btnGroup);
 
     // graph canvas   
     this.canvas.id = 'graphCanvas';
