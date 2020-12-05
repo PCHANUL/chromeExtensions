@@ -75,10 +75,14 @@ class App {
     this.drawBarGraph();
     this.drawLineGraph();
     setTimeout(() => {
-      window.cancelAnimationFrame(this.animationMethod);
+      window.cancelAnimationFrame(this.barGraphAnimation);
       e.target.className = 'btn btn-primary';
       e.target.disabled = false;
       this.animationFrame = 0;
+    }, 1000)
+
+    setTimeout(() => {
+      window.cancelAnimationFrame(this.lineGraphAnimation);
     }, 1000)
 
   }
@@ -87,16 +91,35 @@ class App {
     let clientWidth = this.lineChart.width;
     let clientHeight = this.lineChart.height;
     this.ctxLine.clearRect(0, 0, clientWidth, clientHeight);
+
+    this.ctxLine.font = '10px sanserif';
     this.ctxLine.fillStyle = '#4287f5';
-    // times 데이터를 점으로 찍는다.
+    this.ctxLine.strokeStyle = '#4287f5';
+
+    
     this.times.forEach((time, idx) => {
-      console.log('time: ', time);
+      let xPos = idx * 30 + 15;
+      let yPos = (time.toFixed(3) * this.animationFrame) + 140;
+
       this.ctxLine.beginPath();
-      this.ctxLine.arc(idx * 30 + 15, (time.toFixed(3) * this.adjHeight) + 140, 5, 0, Math.PI * 2, false)
+      this.ctxLine.arc(xPos, yPos, 2, 0, Math.PI * 2, false);
+      this.ctxLine.fillText(`${idx + 1}`, xPos - 3, yPos - 7)
+      this.ctxLine.moveTo(xPos, yPos);
+      // 이전 데이터까지의 선
+      this.ctxLine.lineTo((idx - 1) * 30 + 15, (this.times[idx - 1] * this.animationFrame) + 140);
+      this.ctxLine.stroke();
       this.ctxLine.fill();
     })
-    
-    
+
+    this.ctxLine.beginPath();
+    this.ctxLine.strokeStyle = '#9c9c9c';
+    for (let i = 0; i < 19; i++) {
+      this.ctxLine.moveTo(i*15+10, (this.dataArr.average.toFixed(3) * this.animationFrame) + 140);
+      this.ctxLine.lineTo(i*15+15, (this.dataArr.average.toFixed(3) * this.animationFrame) + 140);
+    }
+    this.ctxLine.stroke();
+
+    this.lineGraphAnimation = window.requestAnimationFrame(this.drawLineGraph.bind(this));
   }
 
 
@@ -120,7 +143,8 @@ class App {
 
       this.ctxBar.fillText(data, (gWidth + 2) * idx + gWidth / 2 - 30, 60)
     })
-    this.animationMethod = window.requestAnimationFrame(this.drawBarGraph.bind(this))
+
+    this.barGraphAnimation = window.requestAnimationFrame(this.drawBarGraph.bind(this));
   }
   
   calcFunction(code) {
