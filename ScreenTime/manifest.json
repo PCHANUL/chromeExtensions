@@ -13,7 +13,10 @@
     "16": "icon.png"
   },
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "Method.js",
+      "background.js"
+    ],
     "persistent": false
   },
   "permissions": [

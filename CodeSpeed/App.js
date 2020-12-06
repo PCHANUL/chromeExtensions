@@ -149,9 +149,7 @@ class App {
   
   calcFunction(code) {
     let start = performance.now();
-    console.time("performance");
     new Function(code)();
-    console.timeEnd("performance");
     let finished = performance.now();
 
     let elapsed = (finished - start);

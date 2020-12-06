@@ -8,12 +8,12 @@ class App {
     })
   }
 
-  render() {
 
-    
+
+
+  render() {
     let h1 = document.createElement('h1');
     h1.innerText = this.text;
     this.target.appendChild(h1);
   }
-
 }
