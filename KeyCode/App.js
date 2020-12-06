@@ -35,8 +35,6 @@ class App {
       // event.clientY
       
     })
-
-
     this.render({ $target });
   }
 
