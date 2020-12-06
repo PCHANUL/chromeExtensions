@@ -15,3 +15,11 @@ function toTime(int) {
 
   return { sec, min, hour }
 }
+
+function getDateNow(prevDate) {
+  let now = new Date();
+  let date = now.getDate();
+  if (prevDate.slice(6) === date) return prevDate;
+  let month = now.getMonth();
+  return `${now.getFullYear()}${month < 10 ? `0${month}` : month}${date < 10 ? `0${date}` : date}`;
+}

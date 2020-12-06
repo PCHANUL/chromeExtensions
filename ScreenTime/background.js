@@ -23,80 +23,66 @@
 // }
 
 
+// 탭 정보 가져오기
+// chrome.tabs.query({
+//   url: 'https://www.youtube.com/*', 
+//   // audible: true,
+// }, tabs => {
+//   let url_id = tabs[0].id;
+// });
+
 chrome.runtime.onInstalled.addListener(function() {
-  console.log(toTime(30000000))
-  
-  console.log('onInstalled...', chrome.tabs);
-  let timer = 0;
-  
-  // setInterval(() => {
-  // }, 5000);
+  chrome.storage.sync.clear();
+  chrome.storage.sync.set({'asdf': 1});
 
-    // chrome.storage.sync.set({
-    //   code: ++timer
-    // });
+  let target = 'www.youtube.com';
+
+  let start, end, calc, dateNow = '00000000';
+  let times = {};
+
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    dateNow = getDateNow(dateNow);
+    console.log('tabId, changeInfo, tab: ', tabId, changeInfo, tab, dateNow);
     
-    chrome.tabs.query({
-      url: 'https://www.youtube.com/*', 
-      // audible: true,
-    }, tabs => {
-      console.log('tabs: ', tabs);
-      let url_id = tabs[0].id;
-      console.log('url: ', url_id);
-    });
+    // 영상 시청 조건
+    if (changeInfo.audible !== undefined) {
+      if (changeInfo.audible) {
+        times[tab.url] = performance.now(); // url과 시작시간
+      } else {
+        start = times[tab.url];
+        end = performance.now();
+        calc = end - start; // 시간 계산
+        delete times[tab.url];  // 객체 정리
 
-    let start, end, dateNow = '00000000';
+        console.log('calc: ', toTime(calc));
+        
+        // 크롬에 저장, url로 구분
+        // chrome.storage.sync.get([target], (data) => {
+        chrome.storage.sync.get((data) => {
+          console.log('data: ', data);
 
-
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-      dateNow = getDateNow(dateNow);
-      console.log('dateNow: ', dateNow.slice(6));
-      console.log('tabId, changeInfo, tab: ', tabId, changeInfo, tab, dateNow);
-      
-
-
-
-      if (changeInfo.audible !== undefined) {
-
-        if (changeInfo.audible) {
-          // url, 데이터 위치  - 확인
-          start = performance.now()
-        } else {
-          end = performance.now();
-          let calc = end - start;
-          console.log(calc, toTime(calc));
-          chrome.storage.sync.get((data) => {
-            chrome.storage.sync.set({ dateNow })
-            data[dateNow]
-          })
-        }
-        // chrome.storage.sync.set({
-        //   start: 
-        // });
+          // 초기화 
+          if (data[target] === undefined) {
+            let init = {};
+            init[target] = {};
+            init[target][dateNow] = calc; // 첫번째 시간 값
+            chrome.storage.sync.set({ ...init })
+          } else {
+            data[target][dateNow] = data[target][dateNow] + calc;
+            chrome.storage.sync.set(data);
+          }
+        })
       }
-
-    })
-
-  // chrome.alarms.create('refresh', { periodInMinutes: 1 });
+    }
+  })
 });
 
+
+
+// chrome.alarms.create('refresh', { periodInMinutes: 1 });
 // chrome.alarms.onAlarm.addListener((alarm) => {
 //   console.log(alarm.name);
 //   helloWorld();
 // });
 
-function getDateNow(prevDate) {
-  let now = new Date();
-  let date = now.getDate();
-  console.log('prevDate.slice(6) === date: ', prevDate.slice(6), date);
-  if (prevDate.slice(6) === date) return prevDate;
-  let month = now.getMonth();
-  return `${now.getFullYear()}${month < 10 ? `0${month}` : month}${date < 10 ? `0${date}` : date}`;
-}
 
-
-
-function helloWorld() {
-  console.log("Hello, world!");
- 
-}
